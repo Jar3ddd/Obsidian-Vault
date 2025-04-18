@@ -157,8 +157,8 @@
             "state": {
               "type": "git-view",
               "state": {},
-              "icon": "lucide-file",
-              "title": "Plugin no longer active"
+              "icon": "git-pull-request",
+              "title": "Source Control"
             }
           }
         ],
@@ -175,10 +175,13 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "local-backup:Run local backup": false,
+      "obsidian-git:Open Git source control": false,
+      "excel:Create Excel File": false
     }
   },
-  "active": "af9ace1a631f93d6",
+  "active": "55afb291df52bdca",
   "lastOpenFiles": [
     "Excel 2025-04-18 11.30.31.sheet.md",
     "Excel 2025-04-18 11.30.32.sheet.md",
