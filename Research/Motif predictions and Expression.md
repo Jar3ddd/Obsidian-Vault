@@ -289,6 +289,126 @@ The script uses this to classify motifs into:
 8. Visualization Tree
 ```
 ```
+
+
+##### **mo_ran**
+==rdf5_get_seql_per_patternV2.1.R==: Extracts genomic location of seqlets (short unprocessed subsequences of patterns) for each motif pattern from the MoDISco HDF5 file output. Final output consist of table with motif assignments, genomic coordinates, and strand information.
+
+The script parses the seqlet-to-pattern assignments in MoDISco HDF5 file and returns a table with:
+- The sequence ID from which the seqlet is extracted
+- Start and end positions
+- Whether the seqlet is a reverse complement
+- The metacluster and pattern that the seqlet supports
+
+**Input**:
+
+**Output**:
+- rdf5_seqlet_patterXXXX_XXX.txt
+
+Outline:
+1. Load HDF5 files from model output
+```
+h5file <- H5Fopen(file.path(
+  dirpath_in,
+  FILE1), "H5F_ACC_RDONLY")
+h5ls(h5file)
+metacluster_group <- h5read(h5file, "metacluster_idx_to_submetacluster_results")
+# loop through the metaclusters 0 and 1
+for (i in c(0, 1)) {
+  metacluster <- metacluster_group[[paste0("metacluster_", i)]]
+}
+```
+2. Iterate through metacluster patterns
+```
+# From metacluster 0
+  seqletls <- metacluster_group[["metacluster_0"]][["seqlets_to_patterns_result"]][["patterns"]][[pattern_name]][["seqlets_and_alnmts"]][["seqlets"]]
+# From metacluster 1
+  seqletls <- metacluster_group[["metacluster_1"]][["seqlets_to_patterns_result"]][["patterns"]][[pattern_name]][["seqlets_and_alnmts"]][["seqlets"]]
+```
+3.  Final formatting and table creation
+```
+seqlet_mc01 <- rbind.data.frame(seqlets_all_mc0, seqlets_all_mc1)
+
+df <- seqlet_mc01 %>%
+  mutate(example = NA, start = NA, end = NA, rc = NA) %>%
+  separate(col = seqlets, into = c("example", "start", "end", "rc"), sep = "[,]")
+
+df$example <- gsub("example:", "", df$example)
+df$start <- gsub("start:", "", df$start)
+df$end <- gsub("end:", "", df$end)
+df$rc <- gsub("rc:", "", df$rc)
+```
+It is important to note that a seqlet is not the final or processed motif (EPM/pattern). Rather it is a short DNA region (10-20bp) that activates filters in the trained CNN mode which are extracted and aligned during MoDISco processing. Additionally, these sequences support a pattern within particular metacluster (low and high expression seqlets). In other words, these are the local regions with high important scores and also related to the PWM and CWM construction.
+For a particular patter, let $$S = \{s_1, \ldots, s_n\}$$ be the seqlets supporting it. Then for each seqlet $s_i$ there is information referencing genomic coordinates $[ a_i, b_i ]$ with strand flags $r_i \in \{forward, reverse\}$. 
+
+==epm_occurence_ranges_TSS-TTS.16.R==: For evaluating where each motif (EPM) most frequently occurs in the gene space by analyzing the distribution of seqlet positions relative to the TSS and TTS. It summarize these distributions with both summary statistics and visualizations
+
+The script will take the previous motif-seqlet mapping table ('==rdf5_get_seql_per_patternV2.1.R==') and computes:
+- Histograms of motif occurrence positions
+- Summary statistics (mean, median, mode, IQR, SD, CV, ect.)
+- CSV tables for TSS and TTS disributions
+- Visualizations for EPM positional frequency
+
+**Input**:
+
+**Output**:
+- X_TSS_motif_ranges_q1q9.csv - Summary stats. for upstream region
+- X_TTS_motif_ranges_q1q9.csv - Summary stats. for downstream region
+- epm_X.png - Histogram plots of seqlet density per motif
+
+
+##### **mo_proj**
+==occ_filter_v1.2JaredsEdit.R==: Filteres mapped motif occurrences (from BLAMM) to retain only those within 1,500bp of a genes's transcription start site (TSS) or transcription termination start (TTS). Afterwards it then annotates each retained motif hit with gene metadata (ID, strand, TSS/TTS distance).
+
+The script connects motif hits (significant mappings from BLAMM) to nearby genes using a GFF annotation file. Specifically, it:
+- Filters motifs based on distance to TSS or TTS positions
+- Appends gene context
+- Outputs a finalized table
+
+==mo_feat-filter_JaredsEdit.R==: After filtering for EPMs within range, we further refine motifs matches based on orientation, motif length, and spatial consistency with expression associated positional ranges. Outputs filtered tabled and BED files for genome visualization.
+
+This script integrates the motif-gene proximity data (from occ_filter) with motif positional statistics (from TSS/TTS range analysis) and gene annotation to:
+- Filter and label motifs based on strand, region, and expected genomic positioning
+- Apply optional quantile or min/max based filters for biological significance 
+- Exports gene-associated motif hits in both csv and BED formats
+
+**Inputs**:
+
+**Outputs**:
+
+Outline:
+1. Loading data from motif-gene matices in 'occ_filter' with motif position and gene annotations.
+```
+occ_filter_output <- "occOry_filter_Root"  # <-- Output from previous script
+file1 <- "OryS0_Root-TSS_motif_ranges_q1q9.csv"        # TSS motif range summary
+file2 <- "OryS0_Root-TTS_motif_ranges_q1q9.csv"        # TTS motif range summary
+file3 <- "Oryza_sativa.IRGSP-1.0.60.gff3" # GFF3 annotation file
+```
+2. Preprocessing annotations and determine parameters for filtering. If set can take only genes, CDS, transcription related features. Additionally, for features create a loc column for identification
+```
+weight_region <- "yes"   # yes or no
+word_size <- 14           # minimum motif match length
+Filter_motif_orient <- "none" # forward, reverse, none
+Filter_annot_type   <- "gene" # gene, CDS, mRNA, UTR, none
+```
+3. For filtering motifs, we retain motifs within 1,500bp of TSS or TTS sites. Moreover, can filter based on orientation and size of motifs with word size specification. Finally, statistical filtering is applied based on quantile or min/max filters
+	1. q10, q90: 10th and 90th percentile of observed motif position (range based filtering)
+	2. min, max: Absolue range of motif position
+	3. dist_transc_border: Min of distance from TSS or TTS
+```
+## Applying min-max filter
+upstream_mima <- upstream_merged %>%
+  filter(dist_transc_border >= min & dist_transc_border <= max)
+downstream_mima <- downstream_merged %>%
+  filter(dist_transc_border >= min & dist_transc_border <= max)
+
+## Applying quantile filters
+upstream_q1q9 <- upstream_merged %>%
+  filter(dist_transc_border >= q10 & dist_transc_border <= q90)
+downstream_q1q9 <- downstream_merged %>%
+  filter(dist_transc_border <= q10 & dist_transc_border <= q90)
+```
+Final BED file are exported to may be used in Genomic visualization tracks (USCS, Ensembl, ect.)
 #### Running Changes to Moca-blue
 Moca-blue as it is currently provided in the [NAMLab Github]([moca_blue/README.md at main · NAMlab/moca_blue · GitHub](https://github.com/NAMlab/moca_blue/blob/main/README.md)) ; however, is currently incomplete and does not use files known from the original paper. In order to complete the motif analysis it was required to modify some of these scripts in order to run on a new species. Below are altered scripts and the modifications made.
 **Occ_filter_v1.2_JaredsEdit.R**:
