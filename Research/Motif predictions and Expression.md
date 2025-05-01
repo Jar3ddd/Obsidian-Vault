@@ -411,6 +411,7 @@ downstream_q1q9 <- downstream_merged %>%
 Final BED file are exported to may be used in Genomic visualization tracks (USCS, Ensembl, ect.)
 #### Running Changes to Moca-blue
 Moca-blue as it is currently provided in the [NAMLab Github]([moca_blue/README.md at main · NAMlab/moca_blue · GitHub](https://github.com/NAMlab/moca_blue/blob/main/README.md)) ; however, is currently incomplete and does not use files known from the original paper. In order to complete the motif analysis it was required to modify some of these scripts in order to run on a new species. Below are altered scripts and the modifications made.
+
 **Occ_filter_v1.2_JaredsEdit.R**:
 The first altered script included the occ_filter.R script. This script is initially run after completing mapping with BLAMM. In the original script it is assumed that from the occurrences output (epms with associated genes) includes metadata such as loc IDs; however, doesn't. To circumvent this issue, I now assign these missing data using a reference gene model file (.gff). Before filtering motifs that are outside the 1500bp feature region (gene, CDS, intron, ect.), I complete preprocessing on the reference file by removing Mt. and Pt. genes. Additionally, I filter information within the reference to make descriptions and identifiers easy to read and work with.
 ```
@@ -519,6 +520,29 @@ To complete the filtering (for this step motifs that are within 1500bp of TSS an
              (!is.na(dist_to_TTS) & dist_to_TTS <= 1500))
 ```
 
+**mo_feat-filter_JaredsEdit**
+After filtering for motifs near annotated features, we would like to further refine our list for biological relevance and add even more scrutinous statistical filtering. This script reduces motif occurrence data relative to gene annotations to:
+- Filter motifs by distance (added as check from original fitering)
+- Annotate motifs as upstream/downstream
+- Apply region-weight filters using motif summary statistics
+- Output filtered table and also create '.bed' file for visualization
+
+In addition to statistical filtering, this also adds interpretability to the model outputs by providing:
+- GO enrichment
+- IGV/USCS genome annotations
+- Motif enrichment summaries
+
+Most changes applied are simply pipeline and data handling measures to account for differences in content from previous moca_blue steps and BLAMM outputs.
+```
+merg_df <- merg_df %>%
+  mutate(motif_length = mend - mstart + 1) %>%
+  filter(motif_length == word_size)
+
+merg_dfB <- merg_df %>%
+  mutate(dist_transc_border = pmin(dist_to_TSS, dist_to_TTS, na.rm = TRUE)) %>%
+  mutate(region = ifelse(dist_to_TSS <= dist_to_TTS, "upstream", "downstream")) %>%
+  mutate(region = ifelse(strand.x == "-", ifelse(region == "upstream", "downstream", "upstream"), region))
+```
 ## Citations  
 1. Peleke, F.F., Zumkeller, S.M., Gültas, M., et al. *Deep learning the cis-regulatory code for gene expression in selected model plants*. Nat Commun 15, 3488 (2024). DOI: 10.1038/s41467-024-47744-0 - [Reference]([Deep learning the cis-regulatory code for gene expression in selected model plants | Nature Communications](https://www.nature.com/articles/s41467-024-47744-0)) [GitHub Scripts]([GitHub - NAMlab/DeepCRE: Deep learning the cis-regulatory code for gene expression in selected model plants](https://github.com/NAMlab/DeepCRE/tree/main))
 
