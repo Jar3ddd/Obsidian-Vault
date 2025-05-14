@@ -1,0 +1,25 @@
+# Moca-Blue Processing
+---
+The [moca-blue]([GitHub - NAMlab/moca_blue](https://github.com/NAMlab/moca_blue)) pipeline, as described is a tool-box from Simon Z. for the analysis of DNA motifs. There are six working directories that can be utilized for the analysis and includes clustering, importance scores, assigning nomenclature (based on model design), motif distribution, motif matching, and filtering. The list below includes said directories and the files to be run in order:
+- mo_nom: Extracts motifs from TF-MoDisco hdf5 files. Assigns nomenclature for future interpretability and produces weblogos for motif visualization
+	- get_rdf5_cwms_per_pattern_v1.1.R
+	- mo_compare_JASPAR2020_v1.0.R
+- mo_clu: Analyze and edit motif files stores in jaspar format. The purpose is to generate dendrograms or trees based on similarity matrices between motifs
+	- mo_cluster_v2.7.R
+	- mo_tree_viz.SZ.v1.0.R
+- mo_imp: (Slightly redundant, scripts made personally before reimplemented model). Simply extracts and visualizes saliency maps and importance scores.
+	- rdf5_get_epm_contrib_scores.v1.1.R
+	- mo_imp_scores.v1.1.R
+	- mo_imp_depth_v0.7.R
+- mo_ran: For optimizing the search for motifs in the genome. Extracts positionally preferred ranges for each motif in a hdf5 file. Creates distributions and meta data associated with preferred positions.
+	- rdf5_get_seql_per_patternV2.1.R
+	- epm_occurence_ranges_TSS-TTS.1.6.R
+	- meta_motif_ranges_characteristics_TSS-TTS.1.4.R
+- BLAMM (mapping motifs to genes): BLAMM maps motifs to reference genome. This links the matches between epm patterns and acutal DNA sequences. 
+- mo_proj: After searching (using BLAMM), the results are further filter based on specified criteria. Suggested to split occurrences using script from BLAMM pipeline.
+	- occ_filter_v1.1.R
+	- mo_feat-filter.v3.4.R
+	- mo_feature_tester.v1.0.R
+	- mo_predictabilityV1.5.R
+	- mo_check_mapping-performance_V1.7.R
+	- mo_genotype_variance.v1.4.R

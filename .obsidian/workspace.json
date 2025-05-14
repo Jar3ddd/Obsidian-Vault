@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Research/GPN MSA/Multiple Alignment to Zarr.md",
+                "file": "Research/CNN Project/Motif predictions and Expression.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Multiple Alignment to Zarr"
+              "title": "Motif predictions and Expression"
             }
           }
         ],
@@ -212,12 +212,16 @@
   },
   "active": "370ce269e50f7f82",
   "lastOpenFiles": [
+    "Research/CNN Project/Post Processing/Edited Pipeline.md",
+    "Research/CNN Project/Post Processing/File Descriptions.md",
+    "Research/CNN Project/Motif predictions and Expression.md",
+    "Research/CNN Project/Post Processing/Moca Blue Overview.md",
+    "Research/CNN Project/Post Processing",
+    "Research/GPN MSA/Multiple Alignment to Zarr.md",
     "Tags.md",
     "Research/GPN MSA/SnakeMake.md",
-    "Research/GPN MSA/Multiple Alignment to Zarr.md",
     "Research/GPN MSA",
     "Research/CNN Project",
-    "Research/CNN Project/Motif predictions and Expression.md",
     "Research/Multiple Alignment to Zarr.md",
     "Guides/Sequence Retrieval and Prediction.md",
     "README.md",
