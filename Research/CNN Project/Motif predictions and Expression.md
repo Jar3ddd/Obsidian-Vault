@@ -141,8 +141,17 @@ Species model accuracy (w/ Rice): Root Models
 
 
 
+Summary: !! ==Add table for SSR performance with the four other species== !!
 
 
+### Moca Blue Analysis
+
+**Rice Model EPM results**
+- Also try and include importance scores across validation sequences (or visual)
+- Match epms with JASPAR -> Get EPMs for rice and begin comparing with those for other speice -> rice specific motifs
+
+- For the clustering algorithm script (creates the dendrograms) compare PWMs of rice with the clusters defined in paper (the 2CWY+, 2CT_, ect...)
+- ==Include EPM clusters occurrence relative to start and stop sites==
 
 
 
