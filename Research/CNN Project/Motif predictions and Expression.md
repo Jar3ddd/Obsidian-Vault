@@ -14,7 +14,7 @@
   Email: su@uta.edu  
 
 ---
-
+#CNN
 ## Abstract  
 With the increasing availability of genomic data and advancements in deep learning, we aim to explore the relationship between genotype motifs and gene expression regulation in rice (Oryza sativa). Our approach involves developing convolutional neural network (CNN) models to predict gene expression levels based on DNA sequence information from gene flanking regions, which play a critical role in gene transcription regulation. Using both single-species (Oryza sativa japonica) and multi-species models, we identify key regulatory motifs that influence gene expression. These identified motifs will be analyzed across rice variants in the Germplasm Collection and used for allele mining to identify superior haplotypes  to uncover potential associations with agronomically important traits. This model will also be employed for the enhanced genomic selection methods incorporating gene expression predictions to accelerate rice breeding.
 
