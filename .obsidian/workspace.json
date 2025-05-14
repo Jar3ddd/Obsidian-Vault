@@ -4,39 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "a4758fed2b2f9c69",
+        "id": "1450dadb3ec95eac",
         "type": "tabs",
         "children": [
           {
-            "id": "e41f5acbd1e2bc32",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Research/CNN Project/Motif predictions and Expression.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Motif predictions and Expression"
-            }
-          },
-          {
-            "id": "6fbc4a08e4110c73",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Research/CNN Project/Motif predictions and Expression.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Motif predictions and Expression"
-            }
-          },
-          {
-            "id": "370ce269e50f7f82",
+            "id": "2fb0e6ff31449b12",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -49,8 +21,7 @@
               "title": "Motif predictions and Expression"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -210,12 +181,30 @@
       "excel:Create Excel File": false
     }
   },
-  "active": "370ce269e50f7f82",
+  "active": "2fb0e6ff31449b12",
   "lastOpenFiles": [
+    "Excel Sheets/CNN_Root_Model.md",
+    "Research/CNN Project/Motif predictions and Expression.md",
+    "Research/CNN Project/Figures/zea_root_plot.png",
+    "Research/CNN Project/Figures/solanum__root_plot.png",
+    "Research/CNN Project/Figures/sbicolor_root_plot.png",
+    "Research/CNN Project/Figures/oryza_root_plot.png",
+    "Research/CNN Project/Figures/arabidopsis_root_plot.png",
+    "README.md",
+    "zea_plot.png",
+    "solanum_plot.png",
+    "sbicolor_plot.png",
+    "oryza_plot.png",
+    "arabidopsis__root_plot.png",
+    "Leaf_Accuracy_CNN.md",
+    "Research/CNN Project/Figures",
+    "Excel Sheets/CNN_Leaf_Model.md",
+    "Guides/Sequence Retrieval and Prediction.md",
+    "Research/CNN Project/Post Processing/Moca Blue Overview.md",
+    "Excel Sheets",
+    "~$Leaf_Training_Results 1.xlsx",
     "Research/CNN Project/Post Processing/Edited Pipeline.md",
     "Research/CNN Project/Post Processing/File Descriptions.md",
-    "Research/CNN Project/Motif predictions and Expression.md",
-    "Research/CNN Project/Post Processing/Moca Blue Overview.md",
     "Research/CNN Project/Post Processing",
     "Research/GPN MSA/Multiple Alignment to Zarr.md",
     "Tags.md",
@@ -223,21 +212,16 @@
     "Research/GPN MSA",
     "Research/CNN Project",
     "Research/Multiple Alignment to Zarr.md",
-    "Guides/Sequence Retrieval and Prediction.md",
-    "README.md",
     "Guides",
     "Excel 2025-04-18 11.30.31.sheet.md",
     "Excel 2025-04-18 11.30.32.sheet.md",
     "Research",
-    "~$Leaf_Training_Results 1.xlsx",
     "[Solanum_lycopersicum.md",
     "2024-10-16.md",
     "Project Notes and Description (Backup - 0417202025).md",
     "Leaf_Training_Results 2.xlsx",
     "Leaf_Training_Results 1.xlsx",
-    "Leaf_Training_Results.xlsx",
     "Daily.md",
-    "Templates/Daily Journal Template.md",
-    "Templates"
+    "Templates/Daily Journal Template.md"
   ]
 }
