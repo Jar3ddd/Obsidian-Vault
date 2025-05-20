@@ -1,5 +1,6 @@
 [
   "local-backup",
   "obsidian-git",
-  "excel"
+  "excel",
+  "obsidian-excel-to-markdown-table"
 ]

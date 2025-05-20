@@ -115,33 +115,30 @@ Additionally, transcriptomic single end short-read data was downloaded from the 
 Species model accuracy (w/ Rice): Leaf Models
 ![[CNN_Leaf_Model#sheet1|0-10:0-4]]
 
-![[zea_plot.png]]
-
-![[arabidopsis_plot.png]]
-
-![[oryza_plot.png]]
-
-![[sbicolor_plot.png]]
-
-![[solanum_plot.png]]
-
 ---
+
 Species model accuracy (w/ Rice): Root Models
 ![[CNN_Root_Model#sheet1|0-5:0-4]]
 
-![[arabidopsis_root_plot.png]]
-
-![[oryza_root_plot.png]]
-
-![[sbicolor_root_plot.png]]
-
-![[solanum__root_plot.png]]
-
-![[zea_root_plot.png]]
 
 
+**Model Averages**
+![[averagesPlot.pdf]]
+Summary Table:
 
-Summary: !! ==Add table for SSR performance with the four other species== !!
+|     | averages | model_type | specie           |
+| --- | -------- | ---------- | ---------------- |
+| 1   | 0.820962 | Leaf       | Arabidopsis      |
+| 2   | 0.851567 | Root       | Solanum          |
+| 3   | 0.805955 | Leaf       | S. Bicolor       |
+| 4   | 0.822908 | Root       | Z. Mays          |
+| 5   | 0.809666 | Leaf       | O. Sativa (jap.) |
+| 6   | 0.809666 | Root       | Arabidopsis      |
+| 7   | 0.82276  | Leaf       | Solanum          |
+| 8   | 0.856558 | Root       | S. Bicolor       |
+| 9   | 0.797546 | Leaf       | Z. Mays          |
+| 10  | 0.812109 | Root       | O. Sativa (jap.) |
+
 
 
 ### Moca Blue Analysis
