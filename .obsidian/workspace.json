@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Commands.md",
+                "file": "Research/CNN Project/Motif predictions and Expression.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Commands"
+              "title": "Motif predictions and Expression"
             }
           }
         ]
@@ -183,7 +183,11 @@
   },
   "active": "2fb0e6ff31449b12",
   "lastOpenFiles": [
+    "Research/CNN Project/Post Processing/Moca Blue Overview.md",
     "Research/CNN Project/Motif predictions and Expression.md",
+    "Research/CNN Project/Post Processing/Edited Pipeline.md",
+    "Research/CNN Project/Post Processing/File Descriptions.md",
+    "Commands.md",
     "Excel Sheets/CNN_Leaf_Model.md",
     "Excel Sheets/avgAccuracies_summary.md",
     "Tags.md",
@@ -192,8 +196,6 @@
     "avgAccuracy_summary.csv",
     "Excel Sheets/CNN_Root_Model.md",
     "Guides/Sequence Retrieval and Prediction.md",
-    "Commands.md",
-    "Research/CNN Project/Post Processing/Moca Blue Overview.md",
     "Research/CNN Project/Figures/zea_root_plot.png",
     "Research/CNN Project/Figures/solanum__root_plot.png",
     "Research/CNN Project/Figures/sbicolor_root_plot.png",
@@ -209,8 +211,6 @@
     "Research/CNN Project/Figures",
     "Excel Sheets",
     "~$Leaf_Training_Results 1.xlsx",
-    "Research/CNN Project/Post Processing/Edited Pipeline.md",
-    "Research/CNN Project/Post Processing/File Descriptions.md",
     "Research/CNN Project/Post Processing",
     "Research/GPN MSA/Multiple Alignment to Zarr.md",
     "Research/GPN MSA/SnakeMake.md",

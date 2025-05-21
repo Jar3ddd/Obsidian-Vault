@@ -124,7 +124,7 @@ Species model accuracy (w/ Rice): Root Models
 
 **Model Averages**
 ![[averagesPlot.pdf]]
-Summary Table:
+**Summary Table**:
 
 |     | averages | model_type | specie           |
 | --- | -------- | ---------- | ---------------- |
@@ -144,6 +144,8 @@ Summary Table:
 ### Moca Blue Analysis
 
 **Rice Model EPM results**
+To analyze predicted motifs, we will utilize the "moca_blue" pipeline originally written by S. Zumkeller. To 
+
 - Also try and include importance scores across validation sequences (or visual)
 - Match epms with JASPAR -> Get EPMs for rice and begin comparing with those for other speice -> rice specific motifs
 
