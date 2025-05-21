@@ -144,11 +144,12 @@ Species model accuracy (w/ Rice): Root Models
 ### Moca Blue Analysis
 
 **Rice Model EPM results**
-To analyze predicted motifs, we will utilize the "moca_blue" pipeline originally written by S. Zumkeller. To 
+To analyze predicted motifs, we will utilize the "moca_blue" pipeline originally written by S. Zumkeller. 
+- Match epms with JASPAR -> Get EPMs for rice and begin comparing with those for other specie -> rice specific motifs
+To begin we we first utilized the JASPAR database to search for transcription factors that matched with predicted EPMs (results can be found from #MAKETAGFORINDIVIDUALFILES). 
+Though other transcription factors were found to match the predicted EPMs, several that appeared more frequently included ERF008, TB1, and TCXI3. Moreover, specific to leaves ==Do lit. review for remaining TF and add justifications for importance==!
 
-- Also try and include importance scores across validation sequences (or visual)
-- Match epms with JASPAR -> Get EPMs for rice and begin comparing with those for other speice -> rice specific motifs
-
+- Also try and include importance scores across validation sequences (or visual) -> currently have total contribution >>> look to mo_imp for base level contributions
 - For the clustering algorithm script (creates the dendrograms) compare PWMs of rice with the clusters defined in paper (the 2CWY+, 2CT_, ect...)
 - ==Include EPM clusters occurrence relative to start and stop sites==
 
