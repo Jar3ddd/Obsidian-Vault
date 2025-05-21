@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Research/CNN Project/Motif predictions and Expression.md",
+                "file": "Commands.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Motif predictions and Expression"
+              "title": "Commands"
             }
           }
         ]
@@ -183,8 +183,8 @@
   },
   "active": "2fb0e6ff31449b12",
   "lastOpenFiles": [
-    "Excel Sheets/CNN_Leaf_Model.md",
     "Research/CNN Project/Motif predictions and Expression.md",
+    "Excel Sheets/CNN_Leaf_Model.md",
     "Excel Sheets/avgAccuracies_summary.md",
     "Tags.md",
     "Research/CNN Project/Figures/averagesPlot.pdf",
