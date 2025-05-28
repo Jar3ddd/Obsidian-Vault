@@ -138,20 +138,42 @@ Species model accuracy (w/ Rice): Root Models
 | 8   | 0.856558 | Root       | S. Bicolor       |
 | 9   | 0.797546 | Leaf       | Z. Mays          |
 | 10  | 0.812109 | Root       | O. Sativa (jap.) |
+**Prediction Results**
+==Add single speices==
 
+In addition to doing self prediction, we also computed prediction labels for the four other model species. To conduct this, we used (**reference R script**) to find the total count of high or low expressed genes. By taking the average of true high expression genes of the total, we were able to compare proportions by labeling the predictions using the predicted probabilities. For predicted probabilities $\leq .5$ predicted labels were given zero (0) whereas the remaining were denoted one (1). To reduce inflating error we also removed "mild" expression or true labels equal to two (2). (==May rewrite json so that only the corresponding chromomes are used from rice. (05/27) all chromosomes are being used, potentially leading to worse results==). Interestingly, the rice model was more accurate when predicting on other monocots such as Sorghum Bicolor and Zea Mays. 
 
-
+|     | species | count | mean_true | mean_pred_prob | std_pred_prob | accuracy |
+| --- | ------- | ----- | --------- | -------------- | ------------- | -------- |
+| 1   | ara     | 10788 | 0.595569  | 0.368455       | 0.160186      | 0.50723  |
+| 2   | sbic    | 14519 | 0.550313  | 0.461955       | 0.311205      | 0.785522 |
+| 3   | sol     | 13269 | 0.578491  | 0.387227       | 0.165406      | 0.564097 |
+| 4   | zea     | 15621 | 0.603547  | 0.416534       | 0.287085      | 0.700211 |
 ### Moca Blue Analysis
 
 **Rice Model EPM results**
-To analyze predicted motifs, we will utilize the "moca_blue" pipeline originally written by S. Zumkeller. 
-- Match epms with JASPAR -> Get EPMs for rice and begin comparing with those for other specie -> rice specific motifs
-To begin we we first utilized the JASPAR database to search for transcription factors that matched with predicted EPMs (results can be found from #MAKETAGFORINDIVIDUALFILES). 
-Though other transcription factors were found to match the predicted EPMs, several that appeared more frequently included ERF008, TB1, and TCXI3. Moreover, specific to leaves ==Do lit. review for remaining TF and add justifications for importance==!
+To analyze predicted motifs, we will utilize the "moca_blue" pipeline originally written by S. Zumkeller. Making use of contribution weight matrices (CWM) we extracted motifs from the CNN model predictions. For Oryza sativa (jap.) there were a total of 64 and 63 EPMs discovered for leaves and roots, respectively. These CWMs provide a view of the single nucleotide contributions within each motif and serve as the foundation for our future downstream analysis including annotation, clustering and genomic mapping using BLAMM. (==Could include more information on CWMs but will leave it for now==).
+
+Examples of weblogos derived from the CWMs. Included are motifs that contained higher total contribution weights from each nucleotide.
+![[epm_Ory_S0_Leaf_p0m18F_91_17_SSCGCCGCGGCCGC.png]]
+![[epm_Ory_S0_Leaf_p0m02F_1028_17.6_NCCTCCTCCTCCNC.png]]
+
+Additionally, histograms showing where EPMs occur most frequently, aligns with the findings for the previous model species Arabidopsis Thaliana, Zea Mays, Sorghum Bicolor, and Solanum Lycopersicum. That is, many of the EPMs are surrounding and more frequently found transcription start and stops sites (TSS/TTS). (==Write script to get average contributions per base*. Maybe some info. from mo_imp folder.== )
+##### Leaf Models
+To begin we we first utilized the JASPAR2020 database to search for transcription factors (TF) that matched with predicted EPMs (just need to create the excel sheet in obsidian). Using (reference R script) we compared TF motif matches predicted by the CNN discovered expression predictive motifs (EPMs, e.g. patterns) across five plant species included Oryza sativa (jap.), Zea Mays, Arabidopsis thaliana, Sorghum bicolor, and Solanum lycopersicum. Using a comparison matrix, we were able to determine the presence or absence of TFs in each species.
+![[venndiagram_TF_components.pdf]]
+
+No TFs were seen in all species; however there were several sets that were conserved across multiple species (==May list specific sets, i.e. between species==) . Though these particular sets suggest shared regulatory motifs and additionally may represent core regulatory elements in plant gene expression; the large class of separated TFs concludes the single species models are learning species specific TFs. Several of these included AHL12, ATHB34, ERF109, ERF7, IDD4, OBP1, Os05g0497200, and TCXI3. Several EPMs were found to match TCXI3 more often, including TB1 and ERF008. (==Specific to oryza try to discuss unique TF and reflect on results==).
+- contribution score: measure similarity between EPM and JASPAR motif
+- p-values: hypothesis to discover statistically significant matches
+- tf annotations: group TF by function instead of name (find if theme in regulation function)
+
+
+---
+### Prediction on mutated sequences
 
 - Also try and include importance scores across validation sequences (or visual) -> currently have total contribution >>> look to mo_imp for base level contributions
 - For the clustering algorithm script (creates the dendrograms) compare PWMs of rice with the clusters defined in paper (the 2CWY+, 2CT_, ect...)
-- ==Include EPM clusters occurrence relative to start and stop sites==
 
 
 
