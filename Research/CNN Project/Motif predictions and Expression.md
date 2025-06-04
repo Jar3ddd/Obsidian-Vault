@@ -122,9 +122,11 @@ Species model accuracy (w/ Rice): Root Models
 
 
 
-**Model Averages**
+**Model Averages**:
+Model performance was assessed by comparing the average classification accuracy across five plant species Arabidopsis thaliana, Solanum lycopersicum, Sorghum bicolor, Zea Mays, and Oryza sativa japonica. For each species, leave-one-out chromosome models were trained used either leaf derived and root derived expression data. Below are the summarized mean accuracy for each combination of species and model type.
+
 ![[averagesPlot.pdf]]
-**Summary Table**:
+**Summary Table**
 
 |     | averages | model_type | specie           |
 | --- | -------- | ---------- | ---------------- |
@@ -138,8 +140,51 @@ Species model accuracy (w/ Rice): Root Models
 | 8   | 0.856558 | Root       | S. Bicolor       |
 | 9   | 0.797546 | Leaf       | Z. Mays          |
 | 10  | 0.812109 | Root       | O. Sativa (jap.) |
+Additionally, from training after evaluating models on the twelve Oryza sat. (jap.) chromosomes, our model achieved a a mean accuracy of 80%, with test-fold accuracies ranging from 0.765 to 0.830. The corresponding auROC values also varied between 0.838 and 0.901, and auPR between 0.841 and 0.900. Fold three provided the best performance (loss = .0401, accuracy = 0.830, auROC = 0.901, auPR = 0.841). Overall, the standard deviation between the chromosome models indicates that the rice model generalized nicely, while also sustaining high discriminative power (auROC > 0.84) and predictive accuracy (~0.80-0.82) regardless of specific training and validation chromosomes.
+
+| test | loss        | accuracy    | auROC       | auPR        |
+|------|-------------|-------------|-------------|-------------|
+| 1    | 0.42757535  | 0.801787615 | 0.886884809 | 0.88533169  |
+| 2    | 0.435768336 | 0.813443065 | 0.882233381 | 0.869498551 |
+| 3    | 0.401403308 | 0.830393493 | 0.901426613 | 0.900353849 |
+| 4    | 0.426205754 | 0.807817578 | 0.885587633 | 0.890048265 |
+| 5    | 0.419906467 | 0.813543618 | 0.89200604  | 0.881481051 |
+| 6    | 0.421861082 | 0.813636363 | 0.890125573 | 0.880331099 |
+| 7    | 0.452201724 | 0.785580516 | 0.874365211 | 0.87488687  |
+| 8    | 0.433509231 | 0.807851255 | 0.887381732 | 0.889001369 |
+| 9    | 0.444549352 | 0.795336783 | 0.878305495 | 0.88780582  |
+| 10   | 0.476812869 | 0.767647088 | 0.858840883 | 0.857477069 |
+| 11   | 0.48156473  | 0.768488765 | 0.851252556 | 0.859113455 |
+| 12   | 0.49644208  | 0.765027344 | 0.838234186 | 0.841009974 |
+==add root table too==
+
 **Prediction Results**
-==Add single speices==
+To evaluate the Oryza sativa (jap.) leaf and root model's self prediction performance, we applied it to the same genome it was trained on and calculated the prediction accuracy using genes with defined expression labels (excluding those with class 2, which were skipped during training). Among the 14,273 valid genes, the model achieve the following:
+- **Accuracy**: 80.2%
+- **auROC**: 0.880
+- **F1-score:**
+	- High expression (class 1): 0.804
+	- Low expression (class 2): 0.801
+Confusion matrix (Leaf):
+
+|            | Predicted: Low | Predicted: High |
+| ---------- | -------------- | --------------- |
+| True: Low  | 5,674          | 1,288           |
+| True: High | 1,534          | 5,777           |
+These results indicated balanced precision and recall across both classes. The high auROC of 0.88 confirms the model's ability to rank high and low expression genes, while the F1-score suggests comparable performance for either. The model does not display any major bias towards predicting either class. (==could add reasoning and importance==)
+
+Furthermore, the root model slightly outperformed the leaf model in both auROC (0.890 v. 0.880) and F1-score for the high expression class (0.829 v. 0.804). It also maintains consistent balanced precision recall tradeoff with higher precision for high expression genes (0.855) and higher recall for low expression genes (0.821). This further confirms that the model has been tuned for deticting biologically relevant expression patterns in both root and leaf tissues. 
+- **Accuracy**: 81.2%
+- **auROC**: 0.890
+- **F1-score**:
+	- High expression (class 1): 0.829
+	- Low expression (class 0): 0.791
+
+|            | Predicted: Low | Predicted: High |
+| ---------- | -------------- | --------------- |
+| True: Low  | 4,505          | 979             |
+| True: High | 1,408          | 5,772           |
+
 
 In addition to doing self prediction, we also computed prediction labels for the four other model species. To conduct this, we used (**reference R script**) to find the total count of high or low expressed genes. By taking the average of true high expression genes of the total, we were able to compare proportions by labeling the predictions using the predicted probabilities. For predicted probabilities $\leq .5$ predicted labels were given zero (0) whereas the remaining were denoted one (1). To reduce inflating error we also removed "mild" expression or true labels equal to two (2). (==May rewrite json so that only the corresponding chromomes are used from rice. (05/27) all chromosomes are being used, potentially leading to worse results==). Interestingly, the rice model was more accurate when predicting on other monocots such as Sorghum Bicolor and Zea Mays. 
 
@@ -152,18 +197,25 @@ In addition to doing self prediction, we also computed prediction labels for the
 ### Moca Blue Analysis
 
 **Rice Model EPM results**
-To analyze predicted motifs, we will utilize the "moca_blue" pipeline originally written by S. Zumkeller. Making use of contribution weight matrices (CWM) we extracted motifs from the CNN model predictions. For Oryza sativa (jap.) there were a total of 64 and 63 EPMs discovered for leaves and roots, respectively. These CWMs provide a view of the single nucleotide contributions within each motif and serve as the foundation for our future downstream analysis including annotation, clustering and genomic mapping using BLAMM. (==Could include more information on CWMs but will leave it for now==).
+To analyze predicted motifs and interpret the regulatory elements caputured by the CNN model, we will utilize the MOCA-Blue pipeline originally developed by S. Zumkeller. This framewrk enables the post processing of model derived patters through the use of contribution weight matricies (CWMs), matrix representations of nucleotide level importance derived from saliency maps. CWMs allow us to characterize the expression predictive motifs (EPMs) by highlighting the contribution of each nucleotide position to the model's predictions
+
+For Oryza sativa (jap.) there were a total of 64 and 63 EPMs discovered for leaves and roots, respectively. These CWMs formed the basis of subsequent analysis, including motif annotations via JASPAR2020 database, unsupervised clusting of EPMs based on similarity, and genomic localization using BLAMM for positional enrichment relative to gene features such as the TSS and TTS.
 
 Examples of weblogos derived from the CWMs. Included are motifs that contained higher total contribution weights from each nucleotide.
 ![[epm_Ory_S0_Leaf_p0m18F_91_17_SSCGCCGCGGCCGC.png]]
 ![[epm_Ory_S0_Leaf_p0m02F_1028_17.6_NCCTCCTCCTCCNC.png]]
 
-Additionally, histograms showing where EPMs occur most frequently, aligns with the findings for the previous model species Arabidopsis Thaliana, Zea Mays, Sorghum Bicolor, and Solanum Lycopersicum. That is, many of the EPMs are surrounding and more frequently found transcription start and stops sites (TSS/TTS). (==Write script to get average contributions per base*. Maybe some info. from mo_imp folder.== )
+Histograms depicting the positional frequency of EPMs across input sequences revlealed a strong enrichment near transcription start sites (TSS) and transcription termination sites (TTS). This trend closely mirrors findings from prior analysis of the model species Arabidopsis thaliana, Zea Mays, Sorghum bicolor, and Solanum lycopersicum, suggesting a conserved regulatory architecture across plant species. The observed clustering of EPMs around TSS and TTS positions support the biological relevance of the motifs confirms that the CNN model has learned features associated with promoter and terminator regions. 
 ##### Leaf Models
-To begin we we first utilized the JASPAR2020 database to search for transcription factors (TF) that matched with predicted EPMs (just need to create the excel sheet in obsidian). Using (reference R script) we compared TF motif matches predicted by the CNN discovered expression predictive motifs (EPMs, e.g. patterns) across five plant species included Oryza sativa (jap.), Zea Mays, Arabidopsis thaliana, Sorghum bicolor, and Solanum lycopersicum. Using a comparison matrix, we were able to determine the presence or absence of TFs in each species.
+To assess the biological relevance of the expression predictive motifs (EPMs) identified by our CNN models, we performed a transcription factor (TF) motif comparison using the JASPAR2020 database. Each EPM was queried against the database to identify potiential matches to known plant TF binding profiles. These comparisons were conducted for the five species: Oryza sativa (jap.), Zea mays, Arabidopsis thaliana, Sorghum bicolor, and Solanum lycopersicum.
+Using a R and R-studio (==add created scripts to a supplement or methods section==), we generated a binary comparison matrix indicating the presence or absence of JASPAR2020 matched TFs across the five species. This allowed for the assessment of both species specific and shared regulatory elements, providing some additional insight into the conservation and divergence of transcriptional control elements inferred by the CNN based model.
 ![[venndiagram_TF_components.pdf]]
+No transcription factors (TFs) were universally conserved across all fives species. However, several subsets of TFs were common to multiple species, indicative of partially conserved regulatory elements that may reflect core transcriptional controls shared broadly among plants (==list TF sets==). Despite this partial conservation, the substantial number of species exclusive TFs highlights that our single species CNN model effectively captures specie specific regulatory motifs. Notably, among these species specific TFs were AHL12, ATHB34, ERF109, ERF7, IDD4, OBPI1, Os05g047200, and TCXI3. Moreover, certain TFs, including TCXI3, TB1, and ERF008 matched more frequently across multiple EPMs., potentially signifying broader roles.
 
-No TFs were seen in all species; however there were several sets that were conserved across multiple species (==May list specific sets, i.e. between species==) . Though these particular sets suggest shared regulatory motifs and additionally may represent core regulatory elements in plant gene expression; the large class of separated TFs concludes the single species models are learning species specific TFs. Several of these included AHL12, ATHB34, ERF109, ERF7, IDD4, OBP1, Os05g0497200, and TCXI3. Several EPMs were found to match TCXI3 more often, including TB1 and ERF008. (==Specific to oryza try to discuss unique TF and reflect on results==).
+No TFs were seen in all species; however there were several sets that were conserved across multiple species (==May list specific sets, i.e. between species==) . Though these particular sets suggest shared regulatory motifs and additionally may represent core regulatory elements in plant gene expression; the large class of separated TFs concludes the single species models are learning species specific TFs. Several of these included AHL12, ATHB34, ERF109, ERF7, IDD4, OBP1, Os05g0497200, and TCXI3. Several EPMs were found to match more often, including TCXI3, TB1 and ERF008.
+Among the transcription factors (TFs) identified uniquely to rice, notable examples included Os05g0497200 and IDD4. Os05g0497200 ([MSF1]([MULTI-FLORET SPIKELET1, which encodes an AP2/ERF protein, determines spikelet meristem fate and sterile lemma identity in rice - PubMed](https://pubmed.ncbi.nlm.nih.gov/23629832/))) is a rice-specific TF previously reported to be involved in rice development processes and responses to environmental stressors and effects the multi-floret spikelete1 (==will need to read more on the publication==). Similarly, IDD4 (Indeterminate Domain 4) belongs to the indeterminate domain (IDD) trascription factor family, recognized for regulating expression patterns under abiotic stresses and hormone responses such as grain size, flowering time, and overall yield potential in rice ([Zhang et. al. 2020]([New insight into comprehensive analysis of INDETERMINATE DOMAIN (IDD) gene family in rice - PubMed](https://pubmed.ncbi.nlm.nih.gov/32912488/))).
+Also, several TFs, including TCXI3, TB1, and ERF008 were frequently matched across multiple predicted patterns, highlighting their broad regulatory influence.
+
 - contribution score: measure similarity between EPM and JASPAR motif
 - p-values: hypothesis to discover statistically significant matches
 - tf annotations: group TF by function instead of name (find if theme in regulation function)
@@ -171,13 +223,18 @@ No TFs were seen in all species; however there were several sets that were conse
 
 ---
 ### Prediction on mutated sequences
+To support future efforts in allele mining and variant prioritization, we evaluated how sequence variants affected predicted gene expression by running our CNN model on mutated version of rice genes. This approach allows for the assessment of regulatory consequences of naturally occurring genetic variation, potentially identifying alleles with expression modifying potential.
+Utilizing the variant call format (VCF) files from ... , which contain single nucleotide variants (SNVs) and small indels for Oryza sativa (jap.). The genomic coordinates of transcription start sites (TSS) and transcription termination sites (TTS) were first extracted from the Ensemble GTF annotation file. Using these intervals, we obtained flanking sequences for each gene from the rice reference genome FASTA using *bedtools getfasta*. Because the positions of interest were predefined (i.e., TSS and TTS), no dynamic scanning was needed only standardized padding and sequence concatenation. These reference sequences were then mutated using *bcftools consensus*, allowing us to generated personalized sequence inputs incorporating known alleles. The resulting mutated sequences were subsequently passed through the CNN prediction pipeline, allowing for direct comparison of expression predictions before and after variant introductions.
+
+To prepare for future allele mining, we now look at running predictions on mutated genes and compare predictive power to the original rice results. Using the variant call information (v60) from Ensembl and bcftools. Initially from the annotated gene file (.gtf) each gene had TSS and TTS regions extracted. Afterwards, the corresponding sequence information was extracted from the fasta file. using the getfasta function from bedtools. Since sites were predetermined the sequences only need to be appended and padded before mutation. 
+
 
 - Also try and include importance scores across validation sequences (or visual) -> currently have total contribution >>> look to mo_imp for base level contributions
 - For the clustering algorithm script (creates the dendrograms) compare PWMs of rice with the clusters defined in paper (the 2CWY+, 2CT_, ect...)
 
 
 
-## Citations  
+## Citations  #references 
 1. Peleke, F.F., Zumkeller, S.M., Gültas, M., et al. *Deep learning the cis-regulatory code for gene expression in selected model plants*. Nat Commun 15, 3488 (2024). DOI: 10.1038/s41467-024-47744-0 - [Reference]([Deep learning the cis-regulatory code for gene expression in selected model plants | Nature Communications](https://www.nature.com/articles/s41467-024-47744-0)) [GitHub Scripts]([GitHub - NAMlab/DeepCRE: Deep learning the cis-regulatory code for gene expression in selected model plants](https://github.com/NAMlab/DeepCRE/tree/main))
 
 ## Including Rice Data
