@@ -110,90 +110,48 @@ Additionally, transcriptomic single end short-read data was downloaded from the 
 
 ---
 
-## Results
-### Model Comparisons  
-Species model accuracy (w/ Rice): Leaf Models
-![[CNN_Leaf_Model#sheet1|0-10:0-4]]
+## Results: For Eight Rice Tissues
+### Model Comparisons Across Eight Rice Tissues
 
----
+In this study, we focused on eight tissues of *Oryza sativa* (japonica) - anther, endosperm, inflorescence, leaf, panicle, pistil, root, and seed - rather than comparing across different plant species.  For each tissue, a convolutional neural network (CNN) was trained using leave one out chromosome (of 12).  Expression labels were placed into three quantiles; however, all training and evaluation steps excluded class 2 genes (intermediate expression), so the models learned to differentiate only low‑expression (class 0) and high‑expression (class 1) genes.  Predicted probabilities ≥ 0.5 were treated as high expression (1), and values < 0.5 were labelled low expression (0).
 
-Species model accuracy (w/ Rice): Root Models
-![[CNN_Root_Model#sheet1|0-5:0-4]]
+#### Training Results
 
+The networks were trained using only class 0 and class 1 genes.  Training runs consistently produced high accuracy and AUROC values, indicating that the models generalize well across different chromosome partitions.  These metrics are reported below.
 
+After training, each tissue‑specific model was applied to a held‑out chromosome from the rice genome.  Only genes labelled low or high expression (classes 0 or 1) were included, and predicted probabilities ≥ 0.5 were labelled high expression.  The table below summarizes prediction performance.  Accuracy ranges from 0.80 to 0.89; AUROC values span 0.88–0.95; and AUPR values range from 0.88–0.96.  F1‑scores are balanced between high and low expression classes, and confusion matrices show no obvious bias toward either class.
 
-**Model Averages**:
-Model performance was assessed by comparing the average classification accuracy across five plant species Arabidopsis thaliana, Solanum lycopersicum, Sorghum bicolor, Zea Mays, and Oryza sativa japonica. For each species, leave-one-out chromosome models were trained used either leaf derived and root derived expression data. Below are the summarized mean accuracy for each combination of species and model type.
+| Tissue            | Accuracy | AUROC |  AUPR | F1 (high) | F1 (low) | True Low (TN) | False High (FP) | False Low (FN) | True High (TP) |
+| ----------------- | -------: | ----: | ----: | --------: | -------: | ------------: | --------------: | -------------: | -------------: |
+| **Anther**        |    0.861 | 0.931 | 0.948 |     0.878 |    0.838 |         5 391 |             811 |          1 276 |          7 513 |
+| **Endosperm**     |    0.850 | 0.920 | 0.916 |     0.849 |    0.850 |         8 492 |           1 527 |          1 465 |          8 425 |
+| **Inflorescence** |    0.878 | 0.943 | 0.957 |     0.896 |    0.852 |         5 122 |             799 |            977 |          7 630 |
+| **Leaf**          |    0.802 | 0.880 | 0.883 |     0.804 |    0.801 |         5 674 |           1 288 |          1 534 |          5 777 |
+| **Panicle**       |    0.882 | 0.948 | 0.964 |     0.904 |    0.849 |         4 594 |             667 |            966 |          7 656 |
+| **Pistil**        |    0.892 | 0.951 | 0.961 |     0.907 |    0.871 |         5 336 |             688 |            898 |          7 719 |
+| **Root**          |    0.812 | 0.890 | 0.912 |     0.829 |    0.791 |         4 505 |             979 |          1 408 |          5 772 |
+| **Seed**          |    0.885 | 0.949 | 0.964 |     0.904 |    0.858 |         4 893 |             678 |            941 |          7 612 |
 
-![[averagesPlot.pdf]]
-**Summary Table**
+The following bar charts depict accuracy, AUROC and AUPR for predictions across tissues:
 
-|     | averages | model_type | specie           |
-| --- | -------- | ---------- | ---------------- |
-| 1   | 0.820962 | Leaf       | Arabidopsis      |
-| 2   | 0.851567 | Root       | Solanum          |
-| 3   | 0.805955 | Leaf       | S. Bicolor       |
-| 4   | 0.822908 | Root       | Z. Mays          |
-| 5   | 0.809666 | Leaf       | O. Sativa (jap.) |
-| 6   | 0.809666 | Root       | Arabidopsis      |
-| 7   | 0.82276  | Leaf       | Solanum          |
-| 8   | 0.856558 | Root       | S. Bicolor       |
-| 9   | 0.797546 | Leaf       | Z. Mays          |
-| 10  | 0.812109 | Root       | O. Sativa (jap.) |
-Additionally, from training after evaluating models on the twelve Oryza sat. (jap.) chromosomes, our model achieved a a mean accuracy of 80%, with test-fold accuracies ranging from 0.765 to 0.830. The corresponding auROC values also varied between 0.838 and 0.901, and auPR between 0.841 and 0.900. Fold three provided the best performance (loss = .0401, accuracy = 0.830, auROC = 0.901, auPR = 0.841). Overall, the standard deviation between the chromosome models indicates that the rice model generalized nicely, while also sustaining high discriminative power (auROC > 0.84) and predictive accuracy (~0.80-0.82) regardless of specific training and validation chromosomes.
-
-| test | loss        | accuracy    | auROC       | auPR        |
-|------|-------------|-------------|-------------|-------------|
-| 1    | 0.42757535  | 0.801787615 | 0.886884809 | 0.88533169  |
-| 2    | 0.435768336 | 0.813443065 | 0.882233381 | 0.869498551 |
-| 3    | 0.401403308 | 0.830393493 | 0.901426613 | 0.900353849 |
-| 4    | 0.426205754 | 0.807817578 | 0.885587633 | 0.890048265 |
-| 5    | 0.419906467 | 0.813543618 | 0.89200604  | 0.881481051 |
-| 6    | 0.421861082 | 0.813636363 | 0.890125573 | 0.880331099 |
-| 7    | 0.452201724 | 0.785580516 | 0.874365211 | 0.87488687  |
-| 8    | 0.433509231 | 0.807851255 | 0.887381732 | 0.889001369 |
-| 9    | 0.444549352 | 0.795336783 | 0.878305495 | 0.88780582  |
-| 10   | 0.476812869 | 0.767647088 | 0.858840883 | 0.857477069 |
-| 11   | 0.48156473  | 0.768488765 | 0.851252556 | 0.859113455 |
-| 12   | 0.49644208  | 0.765027344 | 0.838234186 | 0.841009974 |
-==add root table too==
-
-**Prediction Results**
-To evaluate the Oryza sativa (jap.) leaf and root model's self prediction performance, we applied it to the same genome it was trained on and calculated the prediction accuracy using genes with defined expression labels (excluding those with class 2, which were skipped during training). Among the 14,273 valid genes, the model achieve the following:
-- **Accuracy**: 80.2%
-- **auROC**: 0.880
-- **F1-score:**
-	- High expression (class 1): 0.804
-	- Low expression (class 2): 0.801
-Confusion matrix (Leaf):
-
-|            | Predicted: Low | Predicted: High |
-| ---------- | -------------- | --------------- |
-| True: Low  | 5,674          | 1,288           |
-| True: High | 1,534          | 5,777           |
-These results indicated balanced precision and recall across both classes. The high auROC of 0.88 confirms the model's ability to rank high and low expression genes, while the F1-score suggests comparable performance for either. The model does not display any major bias towards predicting either class. (==could add reasoning and importance==)
-
-Furthermore, the root model slightly outperformed the leaf model in both auROC (0.890 v. 0.880) and F1-score for the high expression class (0.829 v. 0.804). It also maintains consistent balanced precision recall tradeoff with higher precision for high expression genes (0.855) and higher recall for low expression genes (0.821). This further confirms that the model has been tuned for deticting biologically relevant expression patterns in both root and leaf tissues. 
-- **Accuracy**: 81.2%
-- **auROC**: 0.890
-- **F1-score**:
-	- High expression (class 1): 0.829
-	- Low expression (class 0): 0.791
-
-|            | Predicted: Low | Predicted: High |
-| ---------- | -------------- | --------------- |
-| True: Low  | 4,505          | 979             |
-| True: High | 1,408          | 5,772           |
+**Include bar plots for the three results**
 
 
-In addition to doing self prediction, we also computed prediction labels for the four other model species. To conduct this, we used (**reference R script**) to find the total count of high or low expressed genes. By taking the average of true high expression genes of the total, we were able to compare proportions by labeling the predictions using the predicted probabilities. For predicted probabilities $\leq .5$ predicted labels were given zero (0) whereas the remaining were denoted one (1). To reduce inflating error we also removed "mild" expression or true labels equal to two (2). (==May rewrite json so that only the corresponding chromomes are used from rice. (05/27) all chromosomes are being used, potentially leading to worse results==). Interestingly, the rice model was more accurate when predicting on other monocots such as Sorghum Bicolor and Zea Mays. 
+### Example of probability distribution
 
-|     | species | count | mean_true | mean_pred_prob | std_pred_prob | accuracy |
-| --- | ------- | ----- | --------- | -------------- | ------------- | -------- |
-| 1   | ara     | 10788 | 0.595569  | 0.368455       | 0.160186      | 0.50723  |
-| 2   | sbic    | 14519 | 0.550313  | 0.461955       | 0.311205      | 0.785522 |
-| 3   | sol     | 13269 | 0.578491  | 0.387227       | 0.165406      | 0.564097 |
-| 4   | zea     | 15621 | 0.603547  | 0.416534       | 0.287085      | 0.700211 |
+To visualize how the model separates low‑ and high‑expression genes, the histogram below shows predicted high‑expression probabilities for the Leaf tissue model.  True high‑expression genes (class 1) cluster near 1, while true low‑expression genes (class 0) cluster near 0.  The overlap area corresponds to the misclassified cases.
+
+![[pred_prob_distribution_leaf_updated.png]]
+
+
+
+## Discussion
+
+When focusing solely on rice tissues, the CNN models demonstrate consistently high performance on the held‑out data.  Prediction metrics show balanced precision and recall for both expression classes and no systematic bias toward either high or low expression.  The **Pistil** and **Panicle** models achieve slightly higher AUROC and AUPR than others, whereas **Leaf** and **Root** are slightly more challenging; nevertheless, all tissues exhibit strong discriminative ability.
+
+
+
+
 ### Moca Blue Analysis
 
 **Rice Model EPM results**
@@ -224,16 +182,76 @@ Also, several TFs, including TCXI3, TB1, and ERF008 were frequently matched acro
 ---
 ### Prediction on mutated sequences
 To support future efforts in allele mining and variant prioritization, we evaluated how sequence variants affected predicted gene expression by running our CNN model on mutated version of rice genes. This approach allows for the assessment of regulatory consequences of naturally occurring genetic variation, potentially identifying alleles with expression modifying potential.
-Utilizing the variant call format (VCF) files from ... , which contain single nucleotide variants (SNVs) and small indels for Oryza sativa (jap.). The genomic coordinates of transcription start sites (TSS) and transcription termination sites (TTS) were first extracted from the Ensemble GTF annotation file. Using these intervals, we obtained flanking sequences for each gene from the rice reference genome FASTA using *bedtools getfasta*. Because the positions of interest were predefined (i.e., TSS and TTS), no dynamic scanning was needed only standardized padding and sequence concatenation. These reference sequences were then mutated using *bcftools consensus*, allowing us to generated personalized sequence inputs incorporating known alleles. The resulting mutated sequences were subsequently passed through the CNN prediction pipeline, allowing for direct comparison of expression predictions before and after variant introductions.
+Utilizing the variant call format (VCF) files from ... , which contain single nucleotide variants (SNVs) and small indels for Oryza sativa (jap.). The genomic coordinates of transcription start sites (TSS) and transcription termination sites (TTS) were first extracted from the Ensemble GTF annotation file and added to a BED file using the "extract_regions.py" script found in the variant_files directory in Atlas. Using the BED file with position coordinates, we obtained flanking sequences for each gene from the rice reference genome FASTA using *bedtools getfasta*. Because the positions of interest were predefined (i.e., TSS and TTS), no dynamic scanning was needed only standardized padding and sequence concatenation. Once, the sequences for each flank of every gene is generated by bcftools from the BED file, the mutations are applied using a Python script "apply_mutations.py".It parses each sequence and overlays the mutations from the VCF where it overlaps. The final output is FASTA file where the reference sequences have been mutated to reflect the genotypic differences found from the VCF. These mutated sequences, now only need to be appended and padded with '20 Ns' per the expected model's desired shape. To perform this step, all that is required is the running of the "join_sequences.py". For the final step, the CNN model is executed via an earlier script meant to predict on raw genotype sequences, "get_preds_V2.py", located in the "seq_predictions" directory. This script accepts any FASTA file and returns the predicted gene expression values, given the correct sequence shapes (i.e., 3020bp).
 
-To prepare for future allele mining, we now look at running predictions on mutated genes and compare predictive power to the original rice results. Using the variant call information (v60) from Ensembl and bcftools. Initially from the annotated gene file (.gtf) each gene had TSS and TTS regions extracted. Afterwards, the corresponding sequence information was extracted from the fasta file. using the getfasta function from bedtools. Since sites were predetermined the sequences only need to be appended and padded before mutation. 
+==I will like to add the incorporation of INDEL mutations, adding to the types of mutations that can be predicted on. Also, the execution of several scripts is cumbersome and is not optimal, so for usability I will try to explore Snakemake workflows (or similar).==
 
 
 - Also try and include importance scores across validation sequences (or visual) -> currently have total contribution >>> look to mo_imp for base level contributions
 - For the clustering algorithm script (creates the dendrograms) compare PWMs of rice with the clusters defined in paper (the 2CWY+, 2CT_, ect...)
 
+### Analysis of QT12 Gene
+To also analyze the expression changes we will also look at the impact of variations in the QT12 gene, a determinant of grain quality and yield thermotolerance in rice (Liu et. al., 2025). 
+
+The QT12 gene encodes a protein implicated in regulating endosperm storage substance homeostasis through unfolded protein response (UPR). The study by Li et. al. (2025) identified a natural variation in QT12 regulatory sequences particularly within the promoter region, leading to differential expression under heat stress. This variation consists of a key SNP (single nucleotide polymorphism) affecting the interaction of transcription factors such as NF-Y complexes, particularly NF-YA8, NF-YB9, and NF-YC10. This single variation significantly alters the grain's thermal tolerance and subsequently effects both yield and grain quality
+
+#### Methods:
+First, we must retrieve genomic sequences for Oryza Sativa japonica. The original CNN model is trained and predicts on 1kb upstream (promoter), the complete 5' UTR, 3' UTR, and 1kb downstream terminator regions. ==Using (*still finding nice resource for variant and sequence information*), we will need to retrieve both the wild type and mutant regulatory sequences. To ensure that the SNP is properly Identified (as  in Li et. al., (2025)) these sequences will be aligned and the location of the variation will be compared to literature and proximity to the "CCAAT" box.== Initially, after obtaining these sequences, I will use the default CNN pipeline to encode the sequences and pad them accordingly. 
+
+To add to interpretation to the CNN predictions and help improve understanding of the regulatory mechanisms disrupted or activated by the natural variant, we will utilize DeepLIFT. This already completed in the moca_blue pipeline, will allow us to calculate the nucleotide level importance scores, highlighting the regulatory EPMS that impact predicted expression levels the most.
+Subsequently, using TF-modisco we will identify the EPMs within the CNN outputs. Using this we can comparatively assess the location of the discovered motifs and their known SNP location in the QT12 promoter that Li et. al. (2025) identified. 
+
+==Future - using the JASAPR (or other) to map EPMs to known transcription factors. Will be looking for TF binding sites corresponding to the NF-Y family found in the QT12 paper. Would also be neat to link predictions to phenotypic outcomes, though not sure with current pipeline if possible but look into hypothesis testing (also ask Dr. Edwards too).==
+
+---
+
+### SHAP Analysis: Genome-wide Variant Importance
+
+#### Overview:
+In concurrence with the mutated sequence prediction, in R we used a SHAP-based script to help identify variants that drive expression differences for eight rice tissues (leaf, root, panicle, inflorescence, seed, endosperm, anther, and pistil). The script utilized calculated per-variant SHAP-$\delta$ (per base difference between the SHAP contribution for a reference sequence and mutated sequence) from the prediction step and computed zero-shot scores from Plant Caduceus. The summary and plot files combine all chromosomes and tissues. Below is a summary of the results:
+
+##### Variant importance and Zero-shot Scores
+To remove the extra "noise" we only considered the top 0.1% of variants by $\left| \text{SHAP-}\delta \right|$  on each chromosome. Across all chromosomes there was similarity in the magnitudes of importance ($\left| SHAP \right|$ threshold ~ 0.045) suggesting that a comparable absolute SHAP values distinguishes the most influential across tissues. (==may also be nice to include the other metrics, but are they useful? Sign agreement, ect...==). However, despite this agreement there was weak correlation between absolute sizes of SHAP-$\delta$  and ZSS with an average Pearson correlation ~0.018. Some chromosomes (e.g., Chr9) show slightly positive correlation while others show negative correlation (e.g., Chr3). Therefore, we conclude that there is a lack of relationship and hence a variant with a large SHAP contribution does not necessarily have a large ZSS and vice versa.
+##### Rare-allele enrichment among high-impact variants
+Similar to Dr. Buckler et. al () we wished to assess the enrichment of rare variants among those with large SHAP contributions. To conduct this we computed the average minor allele frequency (MAF) across binned portions of the entire SHAP values. Additionally, we provided precision curves depicting the proportion of the top-N variants whose MAF was below the threshold hold of 0.01. 
+Overall, the line graphs for each chromosome portray that as the SHAP values increase the average minor allele frequency decreases (with the exception of Chr3). In other words, variants that high impact on determining gene expression had lower population frequency. These results agree with the ZSS for deleteriousness from Plant Caduceus which demonstrated that mutations with functional effect had 3-fold lower minor allele frequencies. 
+
+##### Relationship between SHAP and zero-shot scores
+We initially tried to find some relationship or correlation between SHAP and zero-shot scores with little success, indicating that the models are inherently capturing different things. First, scatter plots of $\left| \text{SHAP-}\delta \right|$ versus $\left| \text{ZSS} \right|$ for the top 0.1% of variants reveal a wide dispersion with only a slight negative tend for Chr9. Additionally, many variants with high ZSS have moderate contributions and vice versa.
+Likewise, we turned to ZSS enrichment across SHAP bins. For the top 0.1% of variants, grouping variants into 0.01-wide $\left| SHAP \right|$ bins shows that roughly 40-50% exceed $\left| ZSS \right| > 1$ in every bin, without a monotonic increase, further illustrating the weak relationship between SHAP magnitude and ZSS.
+Despite this lack of clear relationship, the connection between SHAP-ZSS varies by chromosome.
+- ==may include those extra metrics from previous highlight==
+
+##### Summary
+Taken together, the SHAP analysis across eight rice tissues (leaf, root, panicle, inflorescence, seed, endosperm, anther, and pistil) reveals a consistent and biologically meaningful pattern in how genomic variants influence predicted gene expression. Across all tissues, variants with the largest SHAP contributions tend to be rare, with mean minor allele frequency (MAF) decreasing steadily from low to high SHAP percentiles. This rare-allele enrichment implies that tissue specific expression variation is largely driven by a shared pool of low-frequency regulatory variants rather than by common alleles.
+- line plot for MAF v SHAP percentile
+
+The relationship between SHAP importance and experimentally derived zero-shot scores (ZSS) is more nuanced. On average, the sign of the SHAP contribution agrees with the direction of the ZSS in roughly two-thirds of high impact variants, suggesting that SHAP caputres the same general direction of regulatory effect seen in empirical data. However, the magnitudes of the two measures only correlate weakly as shown in the scatter plot of $\left| \text{SHAP-}\delta \right|$ and $\left| ZSS \right|$ 
+- scatter plot
+Many variants with large SHAP effects exhibit modest ZSS values, and vice versa, indicating that the sign information in more reliable than the magnitude when interpreting variant influence. The color coding of the scatter plot also reinforces the enrichment of rare variants among those with large SHAP values, with lighter-colored (low frequency) points concentrated in the upper range of SHAP importance.
+Chromosome level comparisons further highlight heterogeneity in how SHAP and ZSS relate to each other. Chromosome 4, for instance, shows he strongest sign agreement, while chromosome 5 exhibits bot the weakest agreement and the highest mean $\left| ZSS \right|$. Such differences could potentially reflect the local genomic structure differences in gene density, linkage disequilibrium, or distribution of tissue specific regulatory elements that show how sequence variation translates into expression effects.
+### Candidate Analysis
+To further refine the results, we begun looking at top 1% values of SHAP values
 
 
+
+---
+### Prediction with Experimental Conditions
+To improve the power and versatility of the model and its post processing we initially introduced several tissue models including the standard leaf and root among several other (8 total). Since some expression is dependent on factors such as experimental condition, we further extend our model to train on such transcription data. Using the ==Tenor=== database, we retrieved several tissues counts (RPK) for many experimental condtions. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
 ## Citations  #references 
 1. Peleke, F.F., Zumkeller, S.M., Gültas, M., et al. *Deep learning the cis-regulatory code for gene expression in selected model plants*. Nat Commun 15, 3488 (2024). DOI: 10.1038/s41467-024-47744-0 - [Reference]([Deep learning the cis-regulatory code for gene expression in selected model plants | Nature Communications](https://www.nature.com/articles/s41467-024-47744-0)) [GitHub Scripts]([GitHub - NAMlab/DeepCRE: Deep learning the cis-regulatory code for gene expression in selected model plants](https://github.com/NAMlab/DeepCRE/tree/main))
 
@@ -276,3 +294,4 @@ The corrected dataset, combining the reference GTF file and TPM counts from the 
 - **Expression Atlas Data**: `jxr5507/expresson_atlas_data2_leaf_trim`  
 - **Processed Data**: `jxr5507/expression_atlas_leaf_counts_complete`
 
+gabriel aguular -- englis hfor defence
