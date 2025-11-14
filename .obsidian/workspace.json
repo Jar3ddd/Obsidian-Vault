@@ -166,7 +166,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 309.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -182,7 +182,7 @@
       "excel:Create Excel File": false
     }
   },
-  "active": "1d64fdf62dfc6fe1",
+  "active": "af9ace1a631f93d6",
   "lastOpenFiles": [
     "Research/CNN Project/Figures/aupr_pred_barplot.pdf",
     "Research/CNN Project/Figures/auroc_pred_barplot.pdf",

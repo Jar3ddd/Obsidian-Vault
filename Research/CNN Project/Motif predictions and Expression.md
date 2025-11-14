@@ -61,7 +61,7 @@ Each nucleotide is encoded as follows:
 This method of encoding ensures that each nucleotide is distinctly represented, allowing the CNN to process the input sequences effectively. The resulting one-hot encoding sequence for any particular DNA strand of length \(n \) is an \(n \times 4\) matrix, where \(n \) is the number of nucleotides.
 
 ### CNN Architecture  
-
+New Push
 
 
 ---
