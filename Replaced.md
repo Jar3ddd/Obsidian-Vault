@@ -83,3 +83,44 @@ In addition to doing self prediction, we also computed prediction labels for the
 | 2   | sbic    | 14519 | 0.550313  | 0.461955       | 0.311205      | 0.785522 |
 | 3   | sol     | 13269 | 0.578491  | 0.387227       | 0.165406      | 0.564097 |
 | 4   | zea     | 15621 | 0.603547  | 0.416534       | 0.287085      | 0.700211 |
+
+
+---
+As mentioned, the driving force behind the convolutional deep learning architecture is the use of convolutional layers. Mathematically, the convolution operation for a single filter _f_ on an input matrix **X** can be represented as:
+
+$$ (Y)_{ij} = (X * f)_{ij} = \sum_{m}\sum_{n} X_{i+m, j+n} \cdot f_{m, n} $$
+
+where ∗∗ denotes the convolution operation, and Y is the resulting feature map. 
+
+For our convolutional network, we initially use the model designed by Pelek et al. [1]([Deep learning the cis-regulatory code for gene expression in selected model plants | Nature Communications](https://www.nature.com/articles/s41467-024-47744-0#data-availability)). The model utilizes three 1D convolutional blocks (two convolution layers) with:
+- Two convolutional layers: 
+- Filters:
+	- **Block 1 and 3**: 64 filters
+	- **Block 2**: 128 filters
+	- **Block 3**: 64 filters
+
+Each block has a kernel size of 8. Every block includes a dropout layer to prevent overfitting, with a dropout rate of 25%. Additionally, each block employs a rectified linear activation function defined as:
+
+$$  
+\text{ReLU}(x) = \max(0, x)  
+$$
+
+To reduce the dimensions of the feature maps and improve computation time, the blocks use max-pooling layers. These layers work by taking the maximum value from the computed convolution (the resulting matrix). The max-pooling operation is represented as:
+
+$$  
+(Y)_{ij} = \max \{X_{i+k, j+l}\}  
+$$
+
+where k and l define the pooling window size. For the model described by Pelek, the pooling window size is 8.
+
+After the convolution and pooling layers, the feature maps are transformed into a single vector, which is passed through a final fully connected layer. In these layers, all nodes are connected with subsequent layers. These fully connected layers are responsible for combining the features extracted from the convolution and making a final prediction.
+
+The fully connected layers can be represented as:
+
+$$  
+Y = W \cdot X + b  
+$$
+
+where W is the weight matrix, X is the input vector, b is the bias vector, and Y is the output.
+
+Similarly to the convolution blocks, the fully connected layers employ dropout after each layer. This technique helps prevent overfitting by randomly deactivating nodes, such that their input becomes zero during predictions.
